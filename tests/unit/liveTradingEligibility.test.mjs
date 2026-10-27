@@ -33,6 +33,15 @@ test('US stock strategies support both configured stock brokers', () => {
   assert.equal(credentialMatchesLiveStrategy(manifest, 'okx'), false)
 })
 
+test('Forex strategies support live execution through MetaTrader 5 only', () => {
+  const manifest = { strategyType: 'cta', markets: ['Forex'] }
+  assert.equal(supportsLiveExecutionMode(manifest), true)
+  assert.equal(credentialMatchesLiveStrategy(manifest, 'mt5'), true)
+  assert.equal(credentialMatchesLiveStrategy(manifest, 'MT5'), true)
+  assert.equal(credentialMatchesLiveStrategy(manifest, 'binance'), false)
+  assert.equal(credentialMatchesLiveStrategy(manifest, 'ibkr'), false)
+})
+
 test('mixed and unsupported markets remain signal-only', () => {
   for (const manifest of [
     { strategyType: 'portfolio', markets: ['Crypto', 'USStock'] },

@@ -66,6 +66,17 @@ export default {
           { key: 'status', label: this.$t('brokerAccounts.kpi.accountStatus'), value: String(i.status || '--'), tone: i.status === 'ACTIVE' ? 'positive' : '' }
         ]
       }
+      if (this.brokerId === 'mt5') {
+        const pnl = Number(i.profit || 0)
+        return [
+          { key: 'equity', label: this.$t('brokerAccounts.kpi.equity'), value: money(i.equity, ccy) },
+          { key: 'balance', label: this.$t('brokerAccounts.kpi.cash'), value: money(i.balance, ccy) },
+          { key: 'free', label: this.$t('brokerAccounts.kpi.buyingPower'), value: money(i.margin_free, ccy), tone: 'accent' },
+          { key: 'pnl', label: this.$t('brokerAccounts.col.pnl'), value: money(i.profit, ccy), tone: pnl > 0 ? 'positive' : (pnl < 0 ? 'negative' : '') },
+          { key: 'positions', label: this.$t('brokerAccounts.kpi.positionsCount'), value: i.position_count != null ? String(i.position_count) : '--' },
+          { key: 'account', label: this.$t('brokerAccounts.kpi.account'), value: `${i.login || '--'} · ${i.server || ''}`, sub: `${String(i.trade_mode || '').toUpperCase()} · 1:${i.leverage || '--'}` }
+        ]
+      }
       if (this.brokerId === 'ibkr') {
         return [
           { key: 'nav', label: this.$t('brokerAccounts.kpi.netLiq'), value: money(i.net_liquidation || i.NetLiquidation, ccy) },

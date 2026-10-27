@@ -7,7 +7,8 @@ export const CRYPTO_EXCHANGE_DISPLAY_NAMES = {
   gate: 'Gate.io',
   htx: 'HTX',
   alpaca: 'Alpaca',
-  ibkr: 'IBKR'
+  ibkr: 'IBKR',
+  mt5: 'MetaTrader 5'
 }
 
 export const CRYPTO_EXCHANGE_IDS = new Set([
@@ -22,6 +23,11 @@ export const CRYPTO_EXCHANGE_IDS = new Set([
 export const US_STOCK_EXCHANGE_IDS = new Set([
   'alpaca',
   'ibkr'
+])
+
+/** Forex / CFD brokers reached through a MetaTrader 5 terminal (e.g. HFM). */
+export const FOREX_EXCHANGE_IDS = new Set([
+  'mt5'
 ])
 
 export const QUICK_TRADE_EXCHANGE_IDS = new Set([
@@ -55,7 +61,7 @@ function liveExecutionMarket (manifest) {
     ? [...new Set(manifest.markets.map(value => String(value || '').trim()).filter(Boolean))]
     : []
   if (markets.length !== 1) return ''
-  return ['Crypto', 'USStock'].includes(markets[0]) ? markets[0] : ''
+  return ['Crypto', 'USStock', 'Forex'].includes(markets[0]) ? markets[0] : ''
 }
 
 /**
@@ -71,6 +77,7 @@ export function credentialMatchesLiveStrategy (manifest, exchangeId) {
   const normalizedExchangeId = String(exchangeId || '').trim().toLowerCase()
   if (market === 'Crypto') return CRYPTO_EXCHANGE_IDS.has(normalizedExchangeId)
   if (market === 'USStock') return US_STOCK_EXCHANGE_IDS.has(normalizedExchangeId)
+  if (market === 'Forex') return FOREX_EXCHANGE_IDS.has(normalizedExchangeId)
   return false
 }
 

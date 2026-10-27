@@ -31,7 +31,7 @@
             </span>
           </div>
           <div class="bp-badge-row">
-            <a-tag v-if="broker.id === 'alpaca' && isConnected" :color="status.paper ? 'blue' : 'orange'">{{ $t(status.paper ? 'brokerAccounts.paperAccount' : 'brokerAccounts.liveAccount') }}</a-tag>
+            <a-tag v-if="(broker.id === 'alpaca' || broker.id === 'mt5') && isConnected" :color="status.paper ? 'blue' : 'orange'">{{ $t(status.paper ? 'brokerAccounts.paperAccount' : 'brokerAccounts.liveAccount') }}</a-tag>
             <a-tag v-for="badge in broker.badges" :key="badge" :color="badgeColor(badge)" class="bp-badge">
               {{ $t('brokerAccounts.badges.' + badge) }}
             </a-tag>
@@ -104,6 +104,7 @@
 <script>
 import AlpacaConnectForm from './forms/AlpacaConnectForm.vue'
 import IbkrConnectForm from './forms/IbkrConnectForm.vue'
+import Mt5ConnectForm from './forms/Mt5ConnectForm.vue'
 import BrokerAccountCard from './BrokerAccountCard.vue'
 import BrokerPositionsTable from './BrokerPositionsTable.vue'
 import BrokerOrdersTable from './BrokerOrdersTable.vue'
@@ -111,17 +112,19 @@ import ProviderLogo from '@/components/ProviderLogo/ProviderLogo.vue'
 
 const FORM_BY_BROKER = {
   alpaca: 'AlpacaConnectForm',
-  ibkr: 'IbkrConnectForm'
+  ibkr: 'IbkrConnectForm',
+  mt5: 'Mt5ConnectForm'
 }
 
 const DOCS = {
   alpaca: 'https://app.alpaca.markets/paper/dashboard/overview',
-  ibkr: 'https://www.interactivebrokers.com/en/trading/tws.php'
+  ibkr: 'https://www.interactivebrokers.com/en/trading/tws.php',
+  mt5: 'https://www.mql5.com/en/docs/python_metatrader5'
 }
 
 export default {
   name: 'BrokerPanel',
-  components: { AlpacaConnectForm, IbkrConnectForm, BrokerAccountCard, BrokerPositionsTable, BrokerOrdersTable, ProviderLogo },
+  components: { AlpacaConnectForm, IbkrConnectForm, Mt5ConnectForm, BrokerAccountCard, BrokerPositionsTable, BrokerOrdersTable, ProviderLogo },
   props: {
     broker: { type: Object, required: true },
     accounts: { type: Array, default: () => [] },
@@ -180,6 +183,7 @@ export default {
         tws_required: 'orange',
         pro_features: 'magenta',
         terminal_required: 'gold',
+        long_short: 'geekblue',
         windows_only: 'red'
       }
       return map[badge] || 'default'

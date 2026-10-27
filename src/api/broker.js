@@ -41,6 +41,17 @@ const ENDPOINTS = {
     fills: '/api/alpaca/fills',
     order: '/api/alpaca/order',
     quote: '/api/alpaca/quote'
+  },
+  mt5: {
+    accounts: '/api/mt5/accounts',
+    status: '/api/mt5/status',
+    connect: '/api/mt5/connect',
+    disconnect: '/api/mt5/disconnect',
+    account: '/api/mt5/account',
+    positions: '/api/mt5/positions',
+    orders: '/api/mt5/orders',
+    order: '/api/mt5/order',
+    quote: '/api/mt5/quote'
   }
 }
 
@@ -51,7 +62,7 @@ function makeBrokerClient (id) {
   return {
     id,
     accounts () {
-      return request({ url: '/api/alpaca/accounts', method: 'get' })
+      return request({ url: ep.accounts || '/api/alpaca/accounts', method: 'get' })
     },
     status (params = {}) {
       return request({ url: ep.status, method: 'get', params })
@@ -94,10 +105,11 @@ function makeBrokerClient (id) {
 
 export const broker = {
   ibkr: makeBrokerClient('ibkr'),
-  alpaca: makeBrokerClient('alpaca')
+  alpaca: makeBrokerClient('alpaca'),
+  mt5: makeBrokerClient('mt5')
 }
 
-export const BROKER_IDS = ['alpaca', 'ibkr']
+export const BROKER_IDS = ['alpaca', 'ibkr', 'mt5']
 
 /**
  * Static descriptor for each broker (logo color, market focus, connect form
@@ -121,5 +133,15 @@ export const BROKER_META = {
     markets: ['USStock', 'Forex', 'Futures'],
     badges: ['tws_required', 'pro_features'],
     cloudFriendly: false
+  },
+  mt5: {
+    id: 'mt5',
+    icon: 'line-chart',
+    color: '#2f6fd6',
+    accent: '#13c2c2',
+    markets: ['Forex'],
+    badges: ['terminal_required', 'long_short'],
+    // Reached over the private Docker network, not the user's desktop.
+    cloudFriendly: true
   }
 }
